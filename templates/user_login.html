@@ -1,0 +1,68 @@
+<!--The user login page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <script src="../static/jquery-3.5.1.min.js"></script>
+    <script src="../static/bootstrap-table.js"></script>
+    <link href="../static/bootstrap.css" rel="stylesheet">
+    <script src="../static/bootstrap-table.js"></script>
+    <link href="../static/bootstrap-table.css" rel="stylesheet">
+    <link href="../static/custom.css" rel="stylesheet">
+</head>
+<body>
+    <!--Navigation bar-->
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                        data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">ECE1779 Assignment1</a>
+            </div>
+            <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                {% if session.is_login %}
+                    <li><a href="#">Hello, {{ session.name }}!</a></li>
+                    <li><a href="/logout">Logout</a><li>
+                {% else %}
+                    <li><a href="#">Hello!</a></li>
+                    <li class="active"><a href="#">User</a></li>
+                    <li><a href="/admin_login">Admin</a></li>
+                {% endif %}
+            </ul>
+            </div>
+        </div>
+    </div>
+    <!--Flash window-->
+    <div class="container form-login">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <!--User login form-->
+    <form action="/user_login" method="post" class="form-login">
+        <div class="form-group">
+            <label for="id_username">User</label>
+            <input type="text" class="form-control" name="username" id="id_username" placeholder="username" {% if username %}value="{{ username }}"{% endif %} autofocus required>
+        </div>
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            <input type="password" class="form-control" name="password" id="id_password" placeholder="password" required>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-danger pull-left" href="/user_forget">Forget</a>
+            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+        </div>
+    </form>
+
+</body>
+</html>

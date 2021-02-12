@@ -1,0 +1,98 @@
+<!--The admin home page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <script src="../static/jquery-3.5.1.min.js"></script>
+    <script src="../static/bootstrap-table.js"></script>
+    <link href="../static/bootstrap.css" rel="stylesheet">
+    <script src="../static/bootstrap-table.js"></script>
+    <link href="../static/bootstrap-table.css" rel="stylesheet">
+    <link href="../static/custom.css" rel="stylesheet">
+</head>
+<body>
+    <!--The navigation bar-->
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                        data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">ECE1779 Assignment1</a>
+            </div>
+            <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Hello, {{ session.name }}!</a></li>
+                <li><a href="/mask_detect">Mask Detection</a></li>
+                <li><a href="/logout">Logout</a><li>
+            </ul>
+            </div>
+        </div>
+    </div>
+    <!--Displays all the user information-->
+    <div class="container form-table">
+        <div class="form-table">
+            <h3 style="text-align: center">User Information</h3>
+        </div>
+        <div class="form-table">
+            <table id="table"></table>
+            <p></p>
+            <a class="btn btn-success pull-left" href="/register">Add User</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('#table').bootstrapTable({
+                url: '/getUsers',
+                dataType: "json",
+                columns: [{
+                    field: 'id',
+                    title: 'ID',
+                    align: 'center'
+                }, {
+                    field: 'username',
+                    title: 'Username',
+                    align: 'center'
+                }, {
+                    field: 'email',
+                    title: 'Email',
+                    align: 'center'
+                }, {
+                    field: 'username',
+                    title: 'Operation',
+                    align: 'center',
+                    <!--Deletes the user-->
+                    formatter: function(value, row, index) {
+                        return '<a onclick="del('+row.id+')">Delete</a>'
+                    }
+                }, {
+                    field: 'password',
+                    title: 'Password',
+                    align: 'center'
+                },]
+            });
+        });
+        function del(id) {
+            var msg = "Do you want to delete this user?";
+            if (confirm(msg))
+                $.ajax({
+                    url: "/deleteUser",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        alert(data.msg);
+                        $("#table").bootstrapTable('refresh', {url:'/getUsers'})
+                    }
+                })
+        }
+    </script>
+
+</body>
+</html>
